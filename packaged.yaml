@@ -1,0 +1,45 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Simple serverless web application
+Resources:
+  WebFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://zaynmalaeb/9269caacb279a7050c34b3625ef47a3e
+      Handler: app.lambda_handler
+      Runtime: python3.9
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /web
+            Method: get
+    Metadata:
+      SamResourceId: WebFunction
+  WebApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: Prod
+      EndpointConfiguration: REGIONAL
+      DefinitionBody:
+        swagger: '2.0'
+        info:
+          title: Serverless Web App API
+        paths:
+          /web:
+            get:
+              x-amazon-apigateway-integration:
+                httpMethod: POST
+                type: aws_proxy
+                uri:
+                  Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${WebFunction.Arn}/invocations
+              responses: {}
+    Metadata:
+      SamResourceId: WebApi
+  WebBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      WebsiteConfiguration:
+        IndexDocument: index.html
+    Metadata:
+      SamResourceId: WebBucket
