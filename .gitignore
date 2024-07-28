@@ -3,11 +3,22 @@
 
 ### Linux ###
 *~
+# SAM build directory
 .aws-sam/
+
+# Environment variable files
 .env
+
+# JetBrains IDEs (e.g., PyCharm) project files
 .idea/
+
+# Visual Studio Code project files
 .vscode/
+
+# Python bytecode files
 *.pyc
+
+# Python cache directories
 __pycache__/
 
 
